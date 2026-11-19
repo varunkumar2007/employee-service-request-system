@@ -1,0 +1,195 @@
+// Prisma schema for Employee Service Request System
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ==========================================
+// ENUMS
+// ==========================================
+
+enum Role {
+  EMPLOYEE
+  SUPPORT_AGENT
+  ADMIN
+}
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum RequestStatus {
+  PENDING
+  ASSIGNED
+  IN_PROGRESS
+  RESOLVED
+  CLOSED
+  REJECTED
+}
+
+enum ActivityType {
+  REQUEST_CREATED
+  STATUS_CHANGE
+  ASSIGNMENT
+  PRIORITY_CHANGE
+  COMMENT_ADDED
+  TICKET_REOPENED
+  SLA_BREACHED
+  SLA_EXTENDED
+}
+
+// ==========================================
+// MODELS
+// ==========================================
+
+model Department {
+  id          String       @id @default(uuid())
+  name        String       @unique
+  code        String       @unique
+  description String?
+  isActive    Boolean      @default(true)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  users       User[]
+  categories  Category[]
+
+  @@index([isActive])
+}
+
+model User {
+  id           String      @id @default(uuid())
+  email        String      @unique
+  passwordHash String
+  fullName     String
+  role         Role        @default(EMPLOYEE)
+  isActive     Boolean     @default(true)
+
+  departmentId String?
+  department   Department? @relation(fields: [departmentId], references: [id])
+
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+
+  createdRequests  ServiceRequest[] @relation("CreatedBy")
+  assignedRequests ServiceRequest[] @relation("AssignedTo")
+  comments         TicketComment[]
+  activities       TicketActivity[]
+  notifications    Notification[]
+
+  @@index([departmentId, role])
+  @@index([email])
+}
+
+model Category {
+  id              String      @id @default(uuid())
+  name            String      @unique
+  departmentId    String
+  department      Department  @relation(fields: [departmentId], references: [id])
+  defaultSlaHours Int         @default(24)
+  isActive        Boolean     @default(true)
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  requests        ServiceRequest[]
+
+  @@index([departmentId, isActive])
+}
+
+model ServiceRequest {
+  id            String        @id @default(uuid())
+  ticketNumber  String        @unique
+  title         String
+  description   String
+  priority      Priority      @default(MEDIUM)
+  status        RequestStatus @default(PENDING)
+
+  categoryId    String
+  category      Category      @relation(fields: [categoryId], references: [id])
+
+  createdById   String
+  createdBy     User          @relation("CreatedBy", fields: [createdById], references: [id])
+
+  assignedToId  String?
+  assignedTo    User?         @relation("AssignedTo", fields: [assignedToId], references: [id])
+
+  slaDueDate    DateTime
+  resolvedAt    DateTime?
+  isSlaBreached Boolean       @default(false)
+
+  // Soft-deletion field
+  deletedAt     DateTime?
+
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  comments      TicketComment[]
+  activities    TicketActivity[]
+  notifications Notification[]
+
+  // Indexes for query performance and role-scoping
+  @@index([createdById, deletedAt])
+  @@index([assignedToId, status, deletedAt])
+  @@index([categoryId, status, deletedAt])
+  @@index([slaDueDate, isSlaBreached, status])
+  @@index([status, deletedAt])
+}
+
+model TicketComment {
+  id         String         @id @default(uuid())
+  requestId  String
+  // onDelete: Restrict prevents cascading deletion of discussion records
+  request    ServiceRequest @relation(fields: [requestId], references: [id], onDelete: Restrict)
+
+  authorId   String
+  author     User           @relation(fields: [authorId], references: [id])
+
+  message    String
+  isInternal Boolean        @default(false)
+  createdAt  DateTime       @default(now())
+  updatedAt  DateTime       @updatedAt
+
+  @@index([requestId, createdAt])
+  @@index([requestId, isInternal])
+}
+
+model TicketActivity {
+  id           String         @id @default(uuid())
+  requestId    String
+  // onDelete: Restrict prevents accidental ticket deletion destroying audit history
+  request      ServiceRequest @relation(fields: [requestId], references: [id], onDelete: Restrict)
+
+  actorId      String
+  actor        User           @relation(fields: [actorId], references: [id])
+
+  activityType ActivityType
+  oldValue     String?
+  newValue     String?
+  createdAt    DateTime       @default(now())
+
+  @@index([requestId, createdAt])
+}
+
+model Notification {
+  id          String          @id @default(uuid())
+  recipientId String
+  recipient   User            @relation(fields: [recipientId], references: [id], onDelete: Cascade)
+
+  requestId   String?
+  request     ServiceRequest? @relation(fields: [requestId], references: [id], onDelete: SetNull)
+
+  title       String
+  message     String
+  isRead      Boolean         @default(false)
+  createdAt   DateTime        @default(now())
+
+  @@index([recipientId, isRead, createdAt])
+}
