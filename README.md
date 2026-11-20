@@ -268,8 +268,7 @@ The seed script creates four default demo accounts for testing all system person
 
 ## 13. Testing Instructions & Results
 
-The system contains **105 automated unit, regression, multi-process, and integration tests** passing with **0 failures**:
-
+The system has 77 verified automated tests passing with 0 failures across the reported test suites:
 ```powershell
 # Run backend regression tests (Phase 2 to 5)
 npm --prefix backend test
@@ -281,14 +280,13 @@ node backend/testMultiProcessLock.js
 npm --prefix frontend run build
 ```
 
-### Verified Test Summary
-- **Phase 2 (Auth, RBAC, Depts, Categories):** 15 Passed
-- **Phase 3 (Service Requests & Scoping):** 16 Passed
-- **Phase 4 (Workflow & Notifications):** 21 Passed
-- **Phase 5 (Analytics & SLA Concurrency):** 20 Passed
-- **Multi-Process Lock Coordination:** 5 Passed
-- **End-to-End Workflow Verification:** 28 Passed
-- **Total:** **105 Passed, 0 Failed**
+Verified Test Summary
+Phase 2 (Auth, RBAC, Depts, Categories): 15 Passed
+Phase 3 (Service Requests & Scoping): 16 Passed
+Phase 4 (Workflow & Notifications): 21 Passed
+Phase 5 (Analytics & SLA Concurrency): 20 Passed
+Multi-Process Lock Coordination: 5 Passed
+Total: 77 Passed, 0 Failed
 
 *For complete test execution logs and individual test descriptions, see [`docs/TESTING.md`](file:///c:/Users/varun/OneDrive/Desktop/employee-service-request-system/docs/TESTING.md).*
 
