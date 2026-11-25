@@ -89,7 +89,7 @@ flowchart LR
     Server -- "Prisma Client Pool" --> DB
 ```
 
-*For detailed architectural sequence diagrams and concurrency design, see [`docs/ARCHITECTURE.md`](file:///c:/Users/varun/OneDrive/Desktop/employee-service-request-system/docs/ARCHITECTURE.md).*
+*For detailed architectural sequence diagrams and concurrency design, see [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
 
 ---
 
@@ -288,7 +288,7 @@ Phase 5 (Analytics & SLA Concurrency): 20 Passed
 Multi-Process Lock Coordination: 5 Passed
 Total: 77 Passed, 0 Failed
 
-*For complete test execution logs and individual test descriptions, see [`docs/TESTING.md`](file:///c:/Users/varun/OneDrive/Desktop/employee-service-request-system/docs/TESTING.md).*
+*For complete test execution logs and individual test descriptions, see [docs/TESTING.md](docs/TESTING.md)
 
 ---
 
@@ -310,9 +310,9 @@ Total: 77 Passed, 0 Failed
 
 ## 16. Technical Documentation Links
 
-- **Architecture & Request Flow:** [`docs/ARCHITECTURE.md`](file:///c:/Users/varun/OneDrive/Desktop/employee-service-request-system/docs/ARCHITECTURE.md)
-- **Database Schema & ERD:** [`docs/DATABASE.md`](file:///c:/Users/varun/OneDrive/Desktop/employee-service-request-system/docs/DATABASE.md)
-- **API Reference Specification:** [`docs/API.md`](file:///c:/Users/varun/OneDrive/Desktop/employee-service-request-system/docs/API.md)
-- **Security & RBAC Policy:** [`docs/SECURITY.md`](file:///c:/Users/varun/OneDrive/Desktop/employee-service-request-system/docs/SECURITY.md)
-- **Testing & Verification Suite:** [`docs/TESTING.md`](file:///c:/Users/varun/OneDrive/Desktop/employee-service-request-system/docs/TESTING.md)
-- **Screenshots & Demonstration Guide:** [`docs/DEMO_GUIDE.md`](file:///c:/Users/varun/OneDrive/Desktop/employee-service-request-system/docs/DEMO_GUIDE.md)
+-- **Architecture & Request Flow:** [Architecture](docs/ARCHITECTURE.md)
+- **Database Schema & ERD:** [Database](docs/DATABASE.md)
+- **API Reference Specification:** [API Reference](docs/API.md)
+- **Security & RBAC Policy:** [Security](docs/SECURITY.md)
+- **Testing & Verification Suite:** [Testing](docs/TESTING.md)
+- **Screenshots & Demonstration Guide:** [Demo Guide](docs/DEMO_GUIDE.md)
