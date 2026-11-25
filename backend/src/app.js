@@ -5,8 +5,23 @@ const apiRoutes = require('./routes');
 const app = express();
 
 // Middlewares
+const allowedOrigins = process.env.FRONTEND_URL
+  ? process.env.FRONTEND_URL.split(',').map(url => url.trim())
+  : ['http://localhost:5173'];
+
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+  origin: (origin, callback) => {
+    // Allow non-browser requests (e.g. mobile apps, curl, server-to-server, Render health checks)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin) || allowedOrigins.includes('*')) {
+      return callback(null, true);
+    }
+    // Automatically allow any Vercel deployment preview / production domain
+    if (/^https:\/\/.*\.vercel\.app$/.test(origin)) {
+      return callback(null, true);
+    }
+    return callback(new Error(`CORS policy does not allow access from origin: ${origin}`));
+  },
   credentials: true
 }));
 app.use(express.json());

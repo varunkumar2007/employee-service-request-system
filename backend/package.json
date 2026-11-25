@@ -6,6 +6,9 @@
   "scripts": {
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
+    "build": "prisma generate",
+    "postinstall": "prisma generate",
+    "db:migrate:prod": "prisma migrate deploy",
     "test": "node testPhase2.js && node testPhase3.js && node testPhase4.js && node testPhase5.js",
     "test:phase2": "node testPhase2.js",
     "test:phase3": "node testPhase3.js",
@@ -29,10 +32,10 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
-    "jsonwebtoken": "^9.0.3"
+    "jsonwebtoken": "^9.0.3",
+    "prisma": "^6.19.3"
   },
   "devDependencies": {
-    "nodemon": "^3.1.9",
-    "prisma": "^6.19.3"
+    "nodemon": "^3.1.9"
   }
 }
